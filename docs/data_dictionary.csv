@@ -1,0 +1,62 @@
+table_name,column_name,description,pandas_dtype,sql_dtype,nullable,missing_count,unique_values,key_role
+matches,match_id,Unique identifier assigned to the match.,string,VARCHAR(20),False,0,1243,PRIMARY KEY
+matches,source_file,Original JSON filename used to extract the match.,str,VARCHAR(100),False,0,1243,NON-KEY
+matches,season,IPL season in which the match was played.,str,VARCHAR(10),False,0,19,NON-KEY
+matches,date,Date on which the match was played.,str,DATE,False,0,947,NON-KEY
+matches,match_type,"Format of the match, such as T20.",str,VARCHAR(20),False,0,1,NON-KEY
+matches,gender,Gender category of the competition.,str,VARCHAR(20),False,0,1,NON-KEY
+matches,team_type,Competition team category.,str,VARCHAR(30),False,0,1,NON-KEY
+matches,overs_limit,Maximum scheduled overs per innings.,int64,SMALLINT,False,0,1,NON-KEY
+matches,venue,Cricket stadium where the match was played.,str,VARCHAR(150),False,0,60,NON-KEY
+matches,city,City associated with the match venue.,str,VARCHAR(100),False,0,37,NON-KEY
+matches,city_original,City value before missing-city imputation.,str,VARCHAR(100),True,51,37,NON-KEY
+matches,city_was_imputed,Indicates whether the city was imputed.,bool,BOOLEAN,False,0,2,NON-KEY
+matches,team1,First participating team.,str,VARCHAR(100),False,0,19,NON-KEY
+matches,team2,Second participating team.,str,VARCHAR(100),False,0,19,NON-KEY
+matches,teams_json,Serialized list of participating teams.,str,JSON,False,0,219,NON-KEY
+matches,toss_winner,Team that won the toss.,str,VARCHAR(100),False,0,19,NON-KEY
+matches,toss_decision,Decision made by the toss-winning team.,str,VARCHAR(20),False,0,2,NON-KEY
+matches,winner,"Team that won the match, when applicable.",str,VARCHAR(100),True,25,19,NON-KEY
+matches,result,"Exceptional match result classification, such as tie or no result.",str,VARCHAR(30),True,1218,2,NON-KEY
+matches,method,"Method used to determine a result, such as D/L.",str,VARCHAR(30),True,1220,1,NON-KEY
+matches,eliminator,Team associated with the eliminator in a tied match.,str,VARCHAR(100),True,1227,7,NON-KEY
+matches,bowl_out,"Bowl-out result information, when available.",float64,INT,True,1243,0,NON-KEY
+matches,player_of_match,Player awarded Player of the Match.,str,VARCHAR(100),False,0,322,NON-KEY
+matches,event_name,Tournament or event name.,str,VARCHAR(150),False,0,1,NON-KEY
+matches,event_match_number,"Match number within the event, when available.",float64,INT,True,74,72,NON-KEY
+matches,event_stage,"Tournament stage, such as league or final.",str,VARCHAR(100),True,1169,7,NON-KEY
+innings,match_id,Unique identifier assigned to the match.,string,VARCHAR(20),False,0,1243,PRIMARY KEY
+innings,innings_number,Sequential innings number within the match.,int64,SMALLINT,False,0,6,PRIMARY KEY
+innings,batting_team,Team batting during the innings.,str,VARCHAR(100),False,0,19,NON-KEY
+innings,is_super_over,Indicates whether the innings belongs to a Super Over.,bool,BOOLEAN,False,0,2,NON-KEY
+innings,target_runs,"Target score for the batting team, when applicable.",float64,INT,True,1277,184,NON-KEY
+innings,target_overs,"Available overs for reaching the target, when applicable.",float64,"DECIMAL(5,2)",True,1277,16,NON-KEY
+innings,overs_recorded,Number of distinct overs represented in the innings.,int64,SMALLINT,False,0,19,NON-KEY
+innings,delivery_count,"Total number of recorded deliveries, including illegal deliveries.",int64,INT,False,0,97,NON-KEY
+innings,legal_deliveries,Number of legal deliveries bowled.,int64,INT,False,0,79,NON-KEY
+innings,total_runs,"Total runs scored, including extras.",int64,INT,False,0,221,NON-KEY
+innings,extras_runs,Runs awarded as extras.,int64,INT,False,0,29,NON-KEY
+innings,batter_runs,Runs credited to the batter.,int64,INT,False,0,216,NON-KEY
+innings,wicket_records,Number of wicket records in the source data.,int64,SMALLINT,False,0,11,NON-KEY
+innings,actual_dismissals,Number of actual batter dismissals.,int64,SMALLINT,False,0,11,NON-KEY
+deliveries,match_id,Unique identifier assigned to the match.,string,VARCHAR(20),False,0,1243,PRIMARY KEY
+deliveries,innings_number,Sequential innings number within the match.,int64,SMALLINT,False,0,6,PRIMARY KEY
+deliveries,over_number,Zero-based over number in the innings.,int64,SMALLINT,False,0,20,PRIMARY KEY
+deliveries,delivery_index_in_over,Delivery sequence index within the over.,int64,SMALLINT,False,0,11,PRIMARY KEY
+deliveries,batting_team,Team batting during the innings.,str,VARCHAR(100),False,0,19,NON-KEY
+deliveries,batter,Batter facing the delivery.,str,VARCHAR(100),False,0,738,NON-KEY
+deliveries,bowler,Bowler delivering the ball.,str,VARCHAR(100),False,0,577,NON-KEY
+deliveries,non_striker,Batter at the non-striker's end.,str,VARCHAR(100),False,0,727,NON-KEY
+deliveries,batter_runs,Runs credited to the batter.,int64,INT,False,0,7,NON-KEY
+deliveries,extras_runs,Runs awarded as extras.,int64,INT,False,0,7,NON-KEY
+deliveries,total_runs,"Total runs scored, including extras.",int64,INT,False,0,8,NON-KEY
+deliveries,wides,Wide runs recorded on the delivery.,int64,SMALLINT,False,0,6,NON-KEY
+deliveries,noballs,No-ball runs recorded on the delivery.,int64,SMALLINT,False,0,5,NON-KEY
+deliveries,byes,Bye runs recorded on the delivery.,int64,SMALLINT,False,0,5,NON-KEY
+deliveries,legbyes,Leg-bye runs recorded on the delivery.,int64,SMALLINT,False,0,6,NON-KEY
+deliveries,penalty,Penalty runs recorded on the delivery.,int64,SMALLINT,False,0,2,NON-KEY
+deliveries,is_legal_delivery,Indicates whether the delivery counts as a legal ball.,bool,BOOLEAN,False,0,2,NON-KEY
+deliveries,wicket_count,Number of wicket records on the delivery.,int64,SMALLINT,False,0,2,NON-KEY
+deliveries,wicket_kinds,Serialized or combined dismissal types recorded.,str,VARCHAR(255),False,0,11,NON-KEY
+deliveries,wickets_json,Serialized wicket details from the source JSON.,str,JSON,False,0,11102,NON-KEY
+deliveries,extras_json,Serialized extras details from the source JSON.,str,JSON,False,0,27,NON-KEY

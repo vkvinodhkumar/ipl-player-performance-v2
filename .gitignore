@@ -1,0 +1,44 @@
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Conda and virtual environments
+.venv/
+venv/
+env/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Raw and generated data
+data/raw/*
+data/interim/*
+data/processed/*
+data/external/*
+data/samples/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/external/.gitkeep
+!data/samples/.gitkeep
+
+# Trained models and generated artifacts
+models/*
+artifacts/*
+!models/**/.gitkeep
+!artifacts/**/.gitkeep
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

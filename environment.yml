@@ -1,0 +1,24 @@
+
+name: ipl-analytics-v2
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.12
+  - pip
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - scipy
+  - pyyaml
+  - python-dotenv
+  - joblib
+  - pytest
+  - jupyter
+  - ipykernel
+  - sqlalchemy
+  - xgboost
+  - catboost
