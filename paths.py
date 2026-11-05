@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 
@@ -8,15 +7,10 @@ def find_project_root(start_path: Path | None = None) -> Path:
     current = (start_path or Path.cwd()).resolve()
 
     for candidate in (current, *current.parents):
-        if (
-            (candidate / "notebooks").is_dir()
-            and (candidate / "src").is_dir()
-        ):
+        if (candidate / "notebooks").is_dir() and (candidate / "src").is_dir():
             return candidate
 
-    raise FileNotFoundError(
-        "IPL Analytics project root could not be found."
-    )
+    raise FileNotFoundError("IPL Analytics project root could not be found.")
 
 
 PROJECT_ROOT = find_project_root()

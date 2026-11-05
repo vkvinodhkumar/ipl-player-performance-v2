@@ -1,4 +1,3 @@
-
 from pathlib import Path
 import getpass
 import math
@@ -58,6 +57,7 @@ print("\nMYSQL CONNECTION: SUCCESS")
 # 3. DATA CONVERSION
 # --------------------------------------------------
 
+
 def clean_value(value):
 
     if pd.isna(value):
@@ -93,36 +93,27 @@ try:
 
         # Verify CSV columns
         if not df.columns.is_unique:
-            raise ValueError(
-                f"Duplicate CSV columns in {table}"
-            )
+            raise ValueError(f"Duplicate CSV columns in {table}")
 
         if len(df) != expected_rows:
-            raise ValueError(
-                f"Unexpected row count in {table}: {len(df)}"
-            )
+            raise ValueError(f"Unexpected row count in {table}: {len(df)}")
 
         # Convert Boolean values
         for column in BOOLEAN_COLUMNS[table]:
 
-            values = (
-                df[column]
-                .astype(str)
-                .str.strip()
-                .str.lower()
+            values = df[column].astype(str).str.strip().str.lower()
+
+            converted = values.map(
+                {
+                    "true": 1,
+                    "false": 0,
+                    "1": 1,
+                    "0": 0,
+                }
             )
 
-            converted = values.map({
-                "true": 1,
-                "false": 0,
-                "1": 1,
-                "0": 0,
-            })
-
             if converted.isna().any():
-                raise ValueError(
-                    f"Invalid Boolean values: {table}.{column}"
-                )
+                raise ValueError(f"Invalid Boolean values: {table}.{column}")
 
             df[column] = converted.astype("int8")
 
@@ -138,9 +129,7 @@ try:
             (database, table),
         )
 
-        database_columns = [
-            row[0] for row in cursor.fetchall()
-        ]
+        database_columns = [row[0] for row in cursor.fetchall()]
 
         if set(df.columns) != set(database_columns):
             raise ValueError(
@@ -150,18 +139,12 @@ try:
             )
 
         # Explicit column names prevent duplicate mapping
-        column_sql = ", ".join(
-            f"`{column}`" for column in df.columns
-        )
+        column_sql = ", ".join(f"`{column}`" for column in df.columns)
 
-        placeholders = ", ".join(
-            ["%s"] * len(df.columns)
-        )
+        placeholders = ", ".join(["%s"] * len(df.columns))
 
         insert_sql = (
-            f"INSERT INTO `{table}` "
-            f"({column_sql}) "
-            f"VALUES ({placeholders})"
+            f"INSERT INTO `{table}` " f"({column_sql}) " f"VALUES ({placeholders})"
         )
 
         # Convert DataFrame to Python records
@@ -177,7 +160,7 @@ try:
 
         for start in range(0, len(records), BATCH_SIZE):
 
-            batch = records[start:start + BATCH_SIZE]
+            batch = records[start : start + BATCH_SIZE]
 
             cursor.executemany(
                 insert_sql,
@@ -188,21 +171,16 @@ try:
 
             inserted += len(batch)
 
-            print(
-                f"{table}: {inserted:,} / {expected_rows:,}"
-            )
+            print(f"{table}: {inserted:,} / {expected_rows:,}")
 
         # Verify actual MySQL count
-        cursor.execute(
-            f"SELECT COUNT(*) FROM `{table}`"
-        )
+        cursor.execute(f"SELECT COUNT(*) FROM `{table}`")
 
         actual_count = cursor.fetchone()[0]
 
         if actual_count != expected_rows:
             raise RuntimeError(
-                f"{table}: expected {expected_rows}, "
-                f"found {actual_count}"
+                f"{table}: expected {expected_rows}, " f"found {actual_count}"
             )
 
         print(f"{table.upper()} IMPORT: PASS")

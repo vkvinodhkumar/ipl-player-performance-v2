@@ -22,3 +22,5 @@ dependencies:
   - sqlalchemy
   - xgboost
   - catboost
+  - tensorflow
+  - Django>=5.2,<5.3

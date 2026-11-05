@@ -1,0 +1,12 @@
+{
+    "model": "Bowling Wickets Prediction",
+    "method": "Permutation Importance",
+    "evaluation_dataset": "Chronological Test Set",
+    "test_rows": 1805,
+    "features_evaluated": 35,
+    "scoring": "neg_mean_absolute_error",
+    "n_repeats": 10,
+    "random_state": 42,
+    "top_feature": "legal_balls_rolling_mean_10",
+    "top_importance": 0.008132807010046017
+}
