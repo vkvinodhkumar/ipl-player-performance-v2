@@ -1,0 +1,104 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Dashboard | IPL Analytics V2{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+        <p class="text-warning fw-semibold mb-1">IPL ANALYTICS V2</p>
+        <h2 class="fw-bold">Dashboard Overview</h2>
+        <p class="text-secondary">IPL historical performance and analytics.</p>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        {% for label, value in kpis.items %}
+        <div class="col-6 col-lg-4 col-xl">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-secondary mb-2">{{ label|cut:"_"|title }}</p>
+                    <h3 class="fw-bold mb-0">{{ value|default:0 }}</h3>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="row g-3">
+
+        <div class="col-12 col-xl-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Matches by Season</h5>
+                    <canvas id="seasonMatchesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Analytics Modules</h5>
+
+                    <div class="list-group list-group-flush">
+                        <a href="{% url 'players:player_search' %}"
+                           class="list-group-item list-group-item-action">
+                            Player Search & Profiles →
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            Batting Predictions →
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            Bowling Predictions →
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            Model Comparison →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{{ season_stats|json_script:"season-chart-data" }}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const element = document.getElementById("season-chart-data");
+    if (!element || typeof Chart === "undefined") return;
+
+    const rows = JSON.parse(element.textContent);
+
+    new Chart(document.getElementById("seasonMatchesChart"), {
+        type: "bar",
+        data: {
+            labels: rows.map(row => row.season),
+            datasets: [{
+                label: "Matches",
+                data: rows.map(row => row.matches),
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+});
+</script>
+{% endblock %}

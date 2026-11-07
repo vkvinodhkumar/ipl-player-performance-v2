@@ -1,0 +1,11 @@
+target,selected_model,output_type,precision,test_rows,raw_negative_predictions,constrained_negative_predictions,raw_predictions_finite,constrained_predictions_finite,raw_MAE,constrained_MAE
+target_next_match_runs_scored,batting_original,non_negative_integer,integer,2375,0,0,True,True,16.64380161557994,16.63957894736842
+target_next_match_balls_faced,DL_MLP,non_negative_integer,integer,2375,0,0,True,True,9.364080322466398,9.358736842105262
+target_next_match_fours,DL_MLP,non_negative_integer,integer,2375,0,0,True,True,1.6712349569923,1.6665263157894736
+target_next_match_sixes,DL_MLP,non_negative_integer,integer,2375,2,0,True,True,1.1579663819137374,1.1229473684210527
+target_next_match_strike_rate,DL_MLP,non_negative_decimal,2 decimal places,2373,0,0,True,True,58.52976556593346,58.52981013342903
+target_next_match_dismissals,DL_MLP,non_negative_integer,integer,2375,0,0,True,True,0.2727031039187783,0.216
+target_next_match_wickets,bowling_wickets,non_negative_integer,integer,1805,0,0,True,True,0.7636570175564702,0.7506925207756233
+target_next_match_runs_conceded,DL_MLP,non_negative_integer,integer,1805,0,0,True,True,9.227933497970454,9.221606648199446
+target_next_match_legal_balls,DL_MLP,non_negative_integer,integer,1805,0,0,True,True,3.8723983363101357,3.8692520775623267
+target_next_match_economy_rate,DL_MLP,non_negative_decimal,2 decimal places,1805,0,0,True,True,2.82137970440389,2.8212719812100744

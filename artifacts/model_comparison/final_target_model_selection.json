@@ -1,0 +1,57 @@
+{
+    "project": "IPL Player Performance Analytics V2",
+    "selection_version": "1.0",
+    "created_at_utc": "2026-11-02T16:39:09.294479+00:00",
+    "selection_policy": {
+        "primary_metric": "MAE",
+        "supporting_metrics": [
+            "RMSE",
+            "R2",
+            "Bias"
+        ],
+        "test_period": "2024-05-02 to 2026-05-29",
+        "baseline": "Training_Mean_Baseline"
+    },
+    "models": {
+        "target_next_match_runs_scored": {
+            "model": "batting_original",
+            "reason": "Best balanced RMSE and R2; batting_sqrt has marginally lower MAE."
+        },
+        "target_next_match_balls_faced": {
+            "model": "DL_MLP",
+            "reason": "Lower MAE and RMSE than training-mean baseline."
+        },
+        "target_next_match_fours": {
+            "model": "DL_MLP",
+            "reason": "Lower MAE and RMSE than training-mean baseline."
+        },
+        "target_next_match_sixes": {
+            "model": "DL_MLP",
+            "reason": "Improves MAE, RMSE and R2 over training-mean baseline."
+        },
+        "target_next_match_strike_rate": {
+            "model": "DL_MLP",
+            "reason": "Better than training-mean baseline; R2 remains negative."
+        },
+        "target_next_match_dismissals": {
+            "model": "DL_MLP",
+            "reason": "Improves MAE and RMSE over training-mean baseline."
+        },
+        "target_next_match_wickets": {
+            "model": "bowling_wickets",
+            "reason": "ML beats DL and baseline on MAE, RMSE and R2."
+        },
+        "target_next_match_runs_conceded": {
+            "model": "DL_MLP",
+            "reason": "Better MAE and RMSE than both baselines."
+        },
+        "target_next_match_legal_balls": {
+            "model": "DL_MLP",
+            "reason": "Substantial improvement over both baselines."
+        },
+        "target_next_match_economy_rate": {
+            "model": "DL_MLP",
+            "reason": "Marginally lower MAE than saved dummy and better than training-mean baseline."
+        }
+    }
+}

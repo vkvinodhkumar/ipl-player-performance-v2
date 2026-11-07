@@ -1,0 +1,18 @@
+{
+    "model_name": "economy_rate_mean_baseline",
+    "target": "target_next_match_economy_rate",
+    "training_mean": 8.629273705784637,
+    "training_rows": 10292,
+    "validation": {
+        "rows": 2025,
+        "MAE": 2.478327949489991,
+        "RMSE": 3.171729530060593,
+        "R2": -0.01678484885816589
+    },
+    "test": {
+        "rows": 1805,
+        "MAE": 2.595160657179788,
+        "RMSE": 3.58431324005086,
+        "R2": -0.012925258284443686
+    }
+}

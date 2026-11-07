@@ -1,0 +1,131 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{{ category|title }} Predictions | IPL Analytics{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+        <p class="text-warning fw-semibold mb-1">MACHINE LEARNING + DEEP LEARNING</p>
+        <h2 class="fw-bold">{{ category|title }} Predictions</h2>
+        <p class="text-secondary">
+            Predict the player's next-match performance using trained models.
+        </p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-9">
+                    <label for="player" class="form-label">Select Player</label>
+                    <input
+                        type="search"
+                        class="form-control"
+                        id="player"
+                        name="player"
+                        list="player-options"
+                        value="{{ selected_player }}"
+                        placeholder="Search IPL player..."
+                        required
+                    >
+
+                    <datalist id="player-options">
+                        {% for player in players %}
+                            <option value="{{ player }}"></option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-ipl w-100">
+                        Generate Prediction
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    {% if result %}
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h4 class="fw-bold">{{ result.player }}</h4>
+                <p class="text-secondary mb-0">
+                    Source match: {{ result.source_match_id }}
+                    | Source date: {{ result.source_date }}
+                </p>
+                <p class="text-warning small mt-2 mb-0">
+                    These are model estimates for the next appearance,
+                    not guaranteed match outcomes.
+                </p>
+            </div>
+        </div>
+
+        <h4 class="mb-3">Machine Learning Predictions</h4>
+
+        <div class="row g-3 mb-4">
+            {% for target, predictions in result.ml_predictions.items %}
+                {% for prediction in predictions %}
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <span class="badge text-bg-primary mb-3">ML</span>
+                                <h6 class="text-secondary">
+                                    {{ prediction.target|cut:"target_next_match_"|cut:"_"|title }}
+                                </h6>
+                                <h2 class="fw-bold text-success">
+                                    {{ prediction.constrained_prediction }}
+                                </h2>
+                                <p class="text-secondary small mb-1">
+                                    Raw: {{ prediction.raw_prediction|floatformat:4 }}
+                                </p>
+                                <p class="text-secondary small mb-0">
+                                    Constrained: {{ prediction.constrained_prediction }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% empty %}
+                <p class="text-secondary">No ML predictions available.</p>
+            {% endfor %}
+        </div>
+
+        <h4 class="mb-3">Deep Learning Predictions</h4>
+
+        <div class="row g-3 mb-4">
+            {% for target, predictions in result.dl_predictions.items %}
+                {% for prediction in predictions %}
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <span class="badge text-bg-info mb-3">DL · MLP</span>
+                                <h6 class="text-secondary">
+                                    {{ prediction.target|cut:"target_next_match_"|cut:"_"|title }}
+                                </h6>
+                                <h2 class="fw-bold text-success">
+                                    {{ prediction.constrained_prediction }}
+                                </h2>
+                                <p class="text-secondary small mb-1">
+                                    Raw: {{ prediction.raw_prediction|floatformat:4 }}
+                                </p>
+                                <p class="text-secondary small mb-0">
+                                    Constrained: {{ prediction.constrained_prediction }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% empty %}
+                <p class="text-secondary">No DL predictions available.</p>
+            {% endfor %}
+        </div>
+
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+target,selected_model,MAE,RMSE,R2,Bias,selection_basis
+target_next_match_runs_scored,batting_original,16.64380161557994,22.45999625955196,0.11159302234503754,-2.564665443695104,Observed aligned test performance
+target_next_match_wickets,bowling_wickets,0.7636570175564702,0.9936457718244734,0.023595159239699903,-0.07074778963233865,Observed aligned test performance
+target_next_match_runs_conceded,DL_MLP,9.227933497970454,11.57727362200617,0.10352874329268869,-1.0374947661508154,Observed aligned test performance
+target_next_match_legal_balls,DL_MLP,3.8723983363101357,5.370623503294017,0.1938242380568116,1.3462891523197418,Observed aligned test performance
+target_next_match_economy_rate,DL_MLP,2.82137970440389,4.0583122130062455,-0.11729409075189046,-1.3349099641359006,Observed aligned test performance

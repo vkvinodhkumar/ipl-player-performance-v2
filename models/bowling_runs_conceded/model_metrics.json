@@ -1,0 +1,18 @@
+{
+    "model_name": "runs_conceded_mean_baseline",
+    "target": "target_next_match_runs_conceded",
+    "training_mean": 26.937044593413,
+    "training_rows": 10293,
+    "validation": {
+        "rows": 2025,
+        "MAE": 8.740263609572848,
+        "RMSE": 10.905562080338296,
+        "R2": -0.0021611040078295396
+    },
+    "test": {
+        "rows": 1805,
+        "MAE": 9.433632732677696,
+        "RMSE": 11.779626503196573,
+        "R2": -6.290754985194269e-05
+    }
+}

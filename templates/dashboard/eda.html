@@ -1,0 +1,267 @@
+
+{% extends "base.html" %}
+
+{% block title %}EDA & Insights | IPL Analytics{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">EDA & Insights</h2>
+        <p class="text-secondary">
+            Explore IPL historical performance across seasons, venues, teams and players.
+        </p>
+    </div>
+
+    <!-- Season analysis -->
+    <h5 class="fw-bold mb-3">Season Analysis</h5>
+
+    <div class="row g-3 mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="fw-bold">Matches by Season</h6>
+                    <canvas id="seasonMatchesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="fw-bold">Runs Scored by Season</h6>
+                    <canvas id="seasonRunsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="fw-bold">Wickets by Season</h6>
+                    <canvas id="seasonWicketsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="fw-bold">Top 10 Venues by Matches</h6>
+                    <canvas id="venueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team analysis -->
+    <h5 class="fw-bold mb-3">Team Analysis</h5>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h6 class="fw-bold">Top 10 Teams by Match Wins</h6>
+            <canvas id="teamWinsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Batting leaderboard -->
+    <h5 class="fw-bold mb-3">Batting Insights</h5>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-transparent">
+            <h6 class="fw-bold mb-0">Top 10 Run Scorers</h6>
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Matches</th>
+                        <th>Runs</th>
+                        <th>Average</th>
+                        <th>Strike Rate</th>
+                        <th>Fours</th>
+                        <th>Sixes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in top_batsmen %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td class="fw-semibold">{{ player.player }}</td>
+                        <td>{{ player.matches }}</td>
+                        <td>{{ player.runs }}</td>
+                        <td>{{ player.average|default:"—" }}</td>
+                        <td>{{ player.strike_rate }}</td>
+                        <td>{{ player.fours }}</td>
+                        <td>{{ player.sixes }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-secondary">
+                            No batting records found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bowling leaderboard -->
+    <h5 class="fw-bold mb-3">Bowling Insights</h5>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-transparent">
+            <h6 class="fw-bold mb-0">Top 10 Wicket Takers</h6>
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Matches</th>
+                        <th>Wickets</th>
+                        <th>Runs Conceded</th>
+                        <th>Legal Balls</th>
+                        <th>Economy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in top_bowlers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td class="fw-semibold">{{ player.player }}</td>
+                        <td>{{ player.matches }}</td>
+                        <td>{{ player.wickets }}</td>
+                        <td>{{ player.runs_conceded }}</td>
+                        <td>{{ player.legal_balls }}</td>
+                        <td>{{ player.economy }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-secondary">
+                            No bowling records found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{{ season_matches|json_script:"season-matches-data" }}
+{{ batting_seasons|json_script:"batting-seasons-data" }}
+{{ bowling_seasons|json_script:"bowling-seasons-data" }}
+{{ venue_stats|json_script:"venue-data" }}
+{{ team_wins|json_script:"team-wins-data" }}
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const readData = (id) => {
+        const element = document.getElementById(id);
+        return element ? JSON.parse(element.textContent) : [];
+    };
+
+    const seasonMatches = readData("season-matches-data");
+    const battingSeasons = readData("batting-seasons-data");
+    const bowlingSeasons = readData("bowling-seasons-data");
+    const venues = readData("venue-data");
+    const teams = readData("team-wins-data");
+
+    function createChart(id, type, labels, datasets, options = {}) {
+        const canvas = document.getElementById(id);
+        if (!canvas || !labels.length) return;
+
+        new Chart(canvas, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: datasets.length > 1
+                    }
+                },
+                ...options
+            }
+        });
+    }
+
+    createChart(
+        "seasonMatchesChart",
+        "bar",
+        seasonMatches.map(x => x.season),
+        [{
+            label: "Matches",
+            data: seasonMatches.map(x => x.matches),
+            borderWidth: 1
+        }]
+    );
+
+    createChart(
+        "seasonRunsChart",
+        "line",
+        battingSeasons.map(x => x.season),
+        [{
+            label: "Total Runs",
+            data: battingSeasons.map(x => x.total_runs),
+            tension: 0.3
+        }]
+    );
+
+    createChart(
+        "seasonWicketsChart",
+        "bar",
+        bowlingSeasons.map(x => x.season),
+        [{
+            label: "Total Wickets",
+            data: bowlingSeasons.map(x => x.total_wickets),
+            borderWidth: 1
+        }]
+    );
+
+    createChart(
+        "venueChart",
+        "bar",
+        venues.map(x => x.venue),
+        [{
+            label: "Matches",
+            data: venues.map(x => x.matches),
+            borderWidth: 1
+        }],
+        {
+            indexAxis: "y"
+        }
+    );
+
+    createChart(
+        "teamWinsChart",
+        "bar",
+        teams.map(x => x.winner),
+        [{
+            label: "Wins",
+            data: teams.map(x => x.wins),
+            borderWidth: 1
+        }]
+    );
+
+});
+</script>
+{% endblock %}

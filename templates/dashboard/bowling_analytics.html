@@ -1,0 +1,253 @@
+
+{% extends "base.html" %}
+
+{% block title %}Bowling Analytics | IPL Analytics{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">Bowling Analytics</h2>
+        <p class="text-secondary">
+            Explore IPL bowling performance, wicket rankings and seasonal trends.
+        </p>
+    </div>
+
+    <!-- Filters -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label">Season</label>
+                    <select name="season" class="form-select">
+                        <option value="">All Seasons</option>
+                        {% for season in seasons %}
+                        <option value="{{ season }}"
+                            {% if selected_season == season %}selected{% endif %}>
+                            {{ season }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Match Type</label>
+                    <select name="match_type" class="form-select">
+                        <option value="">All Match Types</option>
+                        {% for match_type in match_types %}
+                        <option value="{{ match_type }}"
+                            {% if selected_match_type == match_type %}selected{% endif %}>
+                            {{ match_type }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end gap-2">
+                    <button class="btn btn-primary" type="submit">
+                        Apply Filters
+                    </button>
+                    <a href="{% url 'bowling_analytics' %}"
+                       class="btn btn-outline-secondary">
+                        Reset
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-secondary mb-1">Total Wickets</p>
+                    <h3 class="fw-bold">
+                        {{ totals.wickets|default_if_none:0 }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-secondary mb-1">Economy Rate</p>
+                    <h3 class="fw-bold">
+                        {{ economy|default_if_none:"—" }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-secondary mb-1">Bowling Average</p>
+                    <h3 class="fw-bold">
+                        {{ bowling_average|default_if_none:"—" }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-secondary mb-1">Bowling Strike Rate</p>
+                    <h3 class="fw-bold">
+                        {{ bowling_strike_rate|default_if_none:"—" }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-transparent fw-bold">
+                    Top 10 Wicket Takers
+                </div>
+                <div class="card-body">
+                    <canvas id="topWicketTakersChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-transparent fw-bold">
+                    Wickets by Season
+                </div>
+                <div class="card-body">
+                    <canvas id="seasonWicketsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {{ chart_data|json_script:"bowling-chart-data" }}
+
+    <!-- Leaderboard -->
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-transparent fw-bold">
+            Top 10 Wicket Takers
+        </div>
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Matches</th>
+                        <th>Wickets</th>
+                        <th>Runs Conceded</th>
+                        <th>Economy</th>
+                        <th>Average</th>
+                        <th>Strike Rate</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for player in top_bowlers %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td class="fw-semibold">{{ player.player }}</td>
+                        <td>{{ player.matches }}</td>
+                        <td>{{ player.wickets }}</td>
+                        <td>{{ player.runs_conceded|default_if_none:0 }}</td>
+                        <td>{{ player.economy|default_if_none:"—" }}</td>
+                        <td>{{ player.average|default_if_none:"—" }}</td>
+                        <td>{{ player.strike_rate|default_if_none:"—" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            No bowling records found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const element = document.getElementById("bowling-chart-data");
+
+    if (!element) return;
+
+    const data = JSON.parse(element.textContent);
+
+    new Chart(document.getElementById("topWicketTakersChart"), {
+        type: "bar",
+        data: {
+            labels: data.players,
+            datasets: [{
+                label: "Wickets",
+                data: data.wickets,
+                backgroundColor: "rgba(124, 58, 237, 0.75)"
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById("seasonWicketsChart"), {
+        type: "line",
+        data: {
+            labels: data.seasons,
+            datasets: [{
+                label: "Wickets",
+                data: data.season_wickets,
+                borderColor: "#0ea5e9",
+                backgroundColor: "rgba(14, 165, 233, 0.15)",
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

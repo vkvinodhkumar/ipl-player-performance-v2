@@ -1,0 +1,384 @@
+
+{% extends "base.html" %}
+
+{% block title %}Player Comparison | IPL Analytics{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-3">
+
+    <!-- Page heading -->
+    <div class="mb-4">
+        <h2 class="fw-bold">Player Comparison</h2>
+        <p class="text-secondary">
+            Compare historical IPL batting and bowling performance.
+        </p>
+    </div>
+
+    <!-- Player selection -->
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-transparent">
+            <h5 class="fw-bold mb-0">Select Players</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form method="GET" class="row g-3">
+
+                <div class="col-md-5">
+                    <label class="form-label">Player 1</label>
+
+                    <select name="player1" class="form-select" required>
+                        <option value="">Select Player 1</option>
+
+                        {% for player in players %}
+                        <option value="{{ player }}"
+                            {% if player1_name == player %}selected{% endif %}>
+                            {{ player }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label">Player 2</label>
+
+                    <select name="player2" class="form-select" required>
+                        <option value="">Select Player 2</option>
+
+                        {% for player in players %}
+                        <option value="{{ player }}"
+                            {% if player2_name == player %}selected{% endif %}>
+                            {{ player }}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Compare Players
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Error -->
+    {% if error %}
+    <div class="alert alert-warning">
+        {{ error }}
+    </div>
+    {% endif %}
+
+
+    {% if player1 and player2 %}
+
+
+    <!-- Overall comparison summary -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h6 class="text-secondary">{{ player1.player }} - Metric Leads</h6>
+                    <h2 class="text-success fw-bold">
+                        {{ comparison_summary.player1_wins }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h6 class="text-secondary">Tied Metrics</h6>
+                    <h2 class="fw-bold">
+                        {{ comparison_summary.ties }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm text-center">
+                <div class="card-body">
+                    <h6 class="text-secondary">{{ player2.player }} - Metric Leads</h6>
+                    <h2 class="text-primary fw-bold">
+                        {{ comparison_summary.player2_wins }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Comparison charts -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-transparent fw-bold">
+                    Batting Runs Comparison
+                </div>
+                <div class="card-body">
+                    <canvas id="battingComparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-transparent fw-bold">
+                    Bowling Wickets Comparison
+                </div>
+                <div class="card-body">
+                    <canvas id="bowlingComparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    {{ comparison_chart_data|json_script:"comparison-chart-data" }}
+
+
+    <!-- Player names -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold">{{ player1.player }}</h4>
+                    <span class="text-secondary">Player 1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold">{{ player2.player }}</h4>
+                    <span class="text-secondary">Player 2</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Batting comparison -->
+    <h5 class="fw-bold mb-3">Batting Performance Comparison</h5>
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>{{ player1.player }}</th>
+                        <th>{{ player2.player }}</th>
+                        <th>Leader</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for row in batting_rows %}
+
+                    <tr>
+                        <td class="fw-semibold">
+                            {{ row.label }}
+                        </td>
+
+                        <td>
+                            {{ row.player1_value|default_if_none:"—" }}
+                        </td>
+
+                        <td>
+                            {{ row.player2_value|default_if_none:"—" }}
+                        </td>
+
+                        <td>
+                            {% if row.leader == player1.player %}
+                                <span class="badge bg-success">
+                                    {{ row.leader }}
+                                </span>
+                            {% elif row.leader == player2.player %}
+                                <span class="badge bg-primary">
+                                    {{ row.leader }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    {{ row.leader }}
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            No batting comparison data available.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+
+    <!-- Bowling comparison -->
+    <h5 class="fw-bold mb-3">Bowling Performance Comparison</h5>
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>{{ player1.player }}</th>
+                        <th>{{ player2.player }}</th>
+                        <th>Leader</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for row in bowling_rows %}
+
+                    <tr>
+                        <td class="fw-semibold">
+                            {{ row.label }}
+                        </td>
+
+                        <td>
+                            {{ row.player1_value|default_if_none:"—" }}
+                        </td>
+
+                        <td>
+                            {{ row.player2_value|default_if_none:"—" }}
+                        </td>
+
+                        <td>
+                            {% if row.leader == player1.player %}
+                                <span class="badge bg-success">
+                                    {{ row.leader }}
+                                </span>
+                            {% elif row.leader == player2.player %}
+                                <span class="badge bg-primary">
+                                    {{ row.leader }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    {{ row.leader }}
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            No bowling comparison data available.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const dataElement = document.getElementById("comparison-chart-data");
+
+    if (!dataElement) return;
+
+    const data = JSON.parse(dataElement.textContent);
+
+    function createComparisonChart(canvasId, label, values) {
+        const canvas = document.getElementById(canvasId);
+
+        if (!canvas) return;
+
+        new Chart(canvas, {
+            type: "bar",
+            data: {
+                labels: data.players,
+                datasets: [{
+                    label: label,
+                    data: values,
+                    backgroundColor: [
+                        "rgba(124, 58, 237, 0.75)",
+                        "rgba(245, 158, 11, 0.75)"
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    createComparisonChart(
+        "battingComparisonChart",
+        "Runs",
+        data.batting_runs
+    );
+
+    createComparisonChart(
+        "bowlingComparisonChart",
+        "Wickets",
+        data.bowling_wickets
+    );
+
+});
+</script>
+{% endblock %}

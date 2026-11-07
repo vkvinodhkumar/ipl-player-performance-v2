@@ -24,3 +24,4 @@ dependencies:
   - catboost
   - tensorflow
   - Django>=5.2,<5.3
+  - pymysql

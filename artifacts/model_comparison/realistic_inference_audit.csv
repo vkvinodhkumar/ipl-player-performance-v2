@@ -1,0 +1,11 @@
+category,target,selected_model,input_rows,input_features,predictions_finite,schema_valid,MAE,RMSE,R2
+batting,target_next_match_runs_scored,batting_original,2375,43,True,True,16.64380161557994,22.45999625955196,0.11159302234503754
+batting,target_next_match_balls_faced,DL_MLP,2375,42,True,True,9.364080322466398,12.018597539889393,0.12756564953503025
+batting,target_next_match_fours,DL_MLP,2375,42,True,True,1.6712349569923,2.2950621549215056,0.1112623131676519
+batting,target_next_match_sixes,DL_MLP,2375,42,True,True,1.1579663819137374,1.7899822260767215,-0.022557528167971075
+batting,target_next_match_strike_rate,DL_MLP,2373,42,True,True,58.52976556593346,76.05466203127754,-0.023349994039014055
+batting,target_next_match_dismissals,DL_MLP,2375,42,True,True,0.2727031039187783,0.40183825175824156,0.03966722932577793
+bowling,target_next_match_wickets,bowling_wickets,1805,35,True,True,0.7636570175564702,0.9936457718244734,0.023595159239699903
+bowling,target_next_match_runs_conceded,DL_MLP,1805,30,True,True,9.227933497970454,11.57727362200617,0.10352874329268869
+bowling,target_next_match_legal_balls,DL_MLP,1805,30,True,True,3.8723983363101357,5.370623503294017,0.1938242380568116
+bowling,target_next_match_economy_rate,DL_MLP,1805,30,True,True,2.82137970440389,4.0583122130062455,-0.11729409075189046

@@ -1,0 +1,107 @@
+{
+    "project": "IPL Player Performance Analytics V2",
+    "registry_version": "1.0",
+    "created_at_utc": "2026-11-02T16:31:29.179497+00:00",
+    "models": {
+        "target_next_match_balls_faced": {
+            "category": "batting",
+            "target": "target_next_match_balls_faced",
+            "model_path": "artifacts/dl_models/batting/target_next_match_balls_faced/model.keras",
+            "preprocessor_path": "artifacts/dl_models/batting/target_next_match_balls_faced/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/batting/target_next_match_balls_faced/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/batting/target_next_match_balls_faced/training_history.json",
+            "metadata_path": "artifacts/dl_models/batting/target_next_match_balls_faced/metadata.json",
+            "feature_count": 59
+        },
+        "target_next_match_dismissals": {
+            "category": "batting",
+            "target": "target_next_match_dismissals",
+            "model_path": "artifacts/dl_models/batting/target_next_match_dismissals/model.keras",
+            "preprocessor_path": "artifacts/dl_models/batting/target_next_match_dismissals/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/batting/target_next_match_dismissals/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/batting/target_next_match_dismissals/training_history.json",
+            "metadata_path": "artifacts/dl_models/batting/target_next_match_dismissals/metadata.json",
+            "feature_count": 59
+        },
+        "target_next_match_fours": {
+            "category": "batting",
+            "target": "target_next_match_fours",
+            "model_path": "artifacts/dl_models/batting/target_next_match_fours/model.keras",
+            "preprocessor_path": "artifacts/dl_models/batting/target_next_match_fours/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/batting/target_next_match_fours/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/batting/target_next_match_fours/training_history.json",
+            "metadata_path": "artifacts/dl_models/batting/target_next_match_fours/metadata.json",
+            "feature_count": 59
+        },
+        "target_next_match_runs_scored": {
+            "category": "batting",
+            "target": "target_next_match_runs_scored",
+            "model_path": "artifacts/dl_models/batting/target_next_match_runs_scored/model.keras",
+            "preprocessor_path": "artifacts/dl_models/batting/target_next_match_runs_scored/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/batting/target_next_match_runs_scored/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/batting/target_next_match_runs_scored/training_history.json",
+            "metadata_path": "artifacts/dl_models/batting/target_next_match_runs_scored/metadata.json",
+            "feature_count": 59
+        },
+        "target_next_match_sixes": {
+            "category": "batting",
+            "target": "target_next_match_sixes",
+            "model_path": "artifacts/dl_models/batting/target_next_match_sixes/model.keras",
+            "preprocessor_path": "artifacts/dl_models/batting/target_next_match_sixes/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/batting/target_next_match_sixes/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/batting/target_next_match_sixes/training_history.json",
+            "metadata_path": "artifacts/dl_models/batting/target_next_match_sixes/metadata.json",
+            "feature_count": 59
+        },
+        "target_next_match_strike_rate": {
+            "category": "batting",
+            "target": "target_next_match_strike_rate",
+            "model_path": "artifacts/dl_models/batting/target_next_match_strike_rate/model.keras",
+            "preprocessor_path": "artifacts/dl_models/batting/target_next_match_strike_rate/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/batting/target_next_match_strike_rate/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/batting/target_next_match_strike_rate/training_history.json",
+            "metadata_path": "artifacts/dl_models/batting/target_next_match_strike_rate/metadata.json",
+            "feature_count": 59
+        },
+        "target_next_match_economy_rate": {
+            "category": "bowling",
+            "target": "target_next_match_economy_rate",
+            "model_path": "artifacts/dl_models/bowling/target_next_match_economy_rate/model.keras",
+            "preprocessor_path": "artifacts/dl_models/bowling/target_next_match_economy_rate/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/bowling/target_next_match_economy_rate/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/bowling/target_next_match_economy_rate/training_history.json",
+            "metadata_path": "artifacts/dl_models/bowling/target_next_match_economy_rate/metadata.json",
+            "feature_count": 30
+        },
+        "target_next_match_legal_balls": {
+            "category": "bowling",
+            "target": "target_next_match_legal_balls",
+            "model_path": "artifacts/dl_models/bowling/target_next_match_legal_balls/model.keras",
+            "preprocessor_path": "artifacts/dl_models/bowling/target_next_match_legal_balls/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/bowling/target_next_match_legal_balls/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/bowling/target_next_match_legal_balls/training_history.json",
+            "metadata_path": "artifacts/dl_models/bowling/target_next_match_legal_balls/metadata.json",
+            "feature_count": 30
+        },
+        "target_next_match_runs_conceded": {
+            "category": "bowling",
+            "target": "target_next_match_runs_conceded",
+            "model_path": "artifacts/dl_models/bowling/target_next_match_runs_conceded/model.keras",
+            "preprocessor_path": "artifacts/dl_models/bowling/target_next_match_runs_conceded/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/bowling/target_next_match_runs_conceded/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/bowling/target_next_match_runs_conceded/training_history.json",
+            "metadata_path": "artifacts/dl_models/bowling/target_next_match_runs_conceded/metadata.json",
+            "feature_count": 30
+        },
+        "target_next_match_wickets": {
+            "category": "bowling",
+            "target": "target_next_match_wickets",
+            "model_path": "artifacts/dl_models/bowling/target_next_match_wickets/model.keras",
+            "preprocessor_path": "artifacts/dl_models/bowling/target_next_match_wickets/preprocessor.joblib",
+            "scaler_path": "artifacts/dl_models/bowling/target_next_match_wickets/target_scaler.joblib",
+            "history_path": "artifacts/dl_models/bowling/target_next_match_wickets/training_history.json",
+            "metadata_path": "artifacts/dl_models/bowling/target_next_match_wickets/metadata.json",
+            "feature_count": 30
+        }
+    }
+}

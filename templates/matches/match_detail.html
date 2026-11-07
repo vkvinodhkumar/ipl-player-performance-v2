@@ -1,0 +1,235 @@
+
+{% extends "base.html" %}
+
+{% block title %}Match Details | IPL Analytics{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-3">
+
+    <div class="mb-3">
+        <a href="{% url 'matches:match_explorer' %}"
+           class="btn btn-outline-secondary btn-sm">
+            <icon name="arrow-left" /> Back to Match Explorer
+        </a>
+    </div>
+
+    <!-- Match header -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body text-center py-4">
+
+            <div class="text-secondary mb-2">
+                {{ match.season }} | {{ match.match_type }} |
+                {{ match.date|date:"d M Y" }}
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-5">
+                    <h4 class="fw-bold">{{ match.team1 }}</h4>
+                </div>
+
+                <div class="col-2">
+                    <h5 class="text-secondary">VS</h5>
+                </div>
+
+                <div class="col-5">
+                    <h4 class="fw-bold">{{ match.team2 }}</h4>
+                </div>
+            </div>
+
+            {% if match.winner %}
+            <h5 class="text-success mt-3">
+                Winner: {{ match.winner }}
+            </h5>
+            {% else %}
+            <h5 class="text-secondary mt-3">Match result unavailable</h5>
+            {% endif %}
+
+            <p class="text-secondary mb-0 mt-2">
+                {{ match.venue }}{% if match.city %}, {{ match.city }}{% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Match information -->
+    <h5 class="fw-bold mb-3">Match Information</h5>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-secondary small">Toss Winner</div>
+                    <h6 class="fw-bold mt-2">{{ match.toss_winner }}</h6>
+                    <small class="text-secondary">
+                        Decision: {{ match.toss_decision }}
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-secondary small">Player of the Match</div>
+                    <h6 class="fw-bold mt-2">
+                        {{ match.player_of_match|default:"Not available" }}
+                    </h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="text-secondary small">Match Result</div>
+                    <h6 class="fw-bold mt-2">
+                        {{ match.result|default:"Not available" }}
+                    </h6>
+                    {% if match.method %}
+                    <small class="text-secondary">Method: {{ match.method }}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Innings scorecard -->
+    <h5 class="fw-bold mb-3">Innings Scorecard</h5>
+
+    {% for inning in innings %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-transparent py-3">
+            <h6 class="fw-bold mb-0">
+                Innings {{ inning.innings_number }} —
+                {{ inning.batting_team }}
+                {% if inning.is_super_over %}
+                <span class="badge bg-warning text-dark">Super Over</span>
+                {% endif %}
+            </h6>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small">Total Runs</div>
+                    <h4 class="fw-bold">{{ inning.total_runs }}</h4>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small">Wicket Records</div>
+                    <h4 class="fw-bold">{{ inning.wicket_records }}</h4>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small">Overs Recorded</div>
+                    <h4 class="fw-bold">{{ inning.overs_recorded }}</h4>
+                </div>
+
+                <div class="col-6 col-md-3">
+                    <div class="text-secondary small">Legal Deliveries</div>
+                    <h4 class="fw-bold">{{ inning.legal_deliveries }}</h4>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row text-secondary small">
+                <div class="col-md-4">
+                    Batter Runs: {{ inning.batter_runs }}
+                </div>
+                <div class="col-md-4">
+                    Extras: {{ inning.extras_runs }}
+                </div>
+                <div class="col-md-4">
+                    Actual Dismissals: {{ inning.actual_dismissals }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-secondary">
+        No innings information available for this match.
+    </div>
+    {% endfor %}
+
+    <!-- Batting scorecard -->
+    <h5 class="fw-bold mb-3">Batting Performance</h5>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Batting Team</th>
+                        <th>Runs</th>
+                        <th>Balls</th>
+                        <th>Fours</th>
+                        <th>Sixes</th>
+                        <th>Dismissals</th>
+                        <th>Strike Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in batting_scorecard %}
+                    <tr>
+                        <td class="fw-semibold">{{ player.player }}</td>
+                        <td>{{ player.batting_team }}</td>
+                        <td>{{ player.runs_scored }}</td>
+                        <td>{{ player.balls_faced }}</td>
+                        <td>{{ player.fours }}</td>
+                        <td>{{ player.sixes }}</td>
+                        <td>{{ player.dismissals }}</td>
+                        <td>{{ player.strike_rate|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-secondary">
+                            No batting records available.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bowling scorecard -->
+    <h5 class="fw-bold mb-3">Bowling Performance</h5>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Wickets</th>
+                        <th>Runs Conceded</th>
+                        <th>Legal Balls</th>
+                        <th>Overs</th>
+                        <th>Economy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in bowling_scorecard %}
+                    <tr>
+                        <td class="fw-semibold">{{ player.player }}</td>
+                        <td>{{ player.wickets }}</td>
+                        <td>{{ player.runs_conceded }}</td>
+                        <td>{{ player.legal_balls }}</td>
+                        <td>{{ player.overs_bowled }}</td>
+                        <td>{{ player.economy_rate|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-secondary">
+                            No bowling records available.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

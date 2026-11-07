@@ -6,6 +6,12 @@ __pycache__/
 .coverage
 htmlcov/
 
+# Local databases
+*.sqlite3
+*.db
+
+
+
 # Conda and virtual environments
 .venv/
 venv/
@@ -31,11 +37,8 @@ data/samples/*
 !data/external/.gitkeep
 !data/samples/.gitkeep
 
-# Trained models and generated artifacts
-models/*
-artifacts/*
-!models/**/.gitkeep
-!artifacts/**/.gitkeep
+# Trained models and inference artifacts
+# Required model bundles, registries, evaluation reports and comparison files
 
 # Editors and operating systems
 .vscode/

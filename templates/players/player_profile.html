@@ -1,0 +1,429 @@
+﻿
+{% extends "base.html" %}
+
+{% block title %}{{ profile.player }} | IPL Analytics{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Player Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <p class="text-warning fw-semibold mb-1">IPL PLAYER PROFILE</p>
+            <h2 class="fw-bold mb-1">{{ profile.player }}</h2>
+            <p class="text-secondary mb-0">
+                Latest match:
+                {% if profile.latest_match %}
+                    {{ profile.latest_match.date }} |
+                    Season {{ profile.latest_match.season }}
+                {% else %}
+                    Not available
+                {% endif %}
+            </p>
+        </div>
+
+        <a href="{% url 'players:player_search' %}"
+           class="btn btn-outline-secondary">
+            Back to Search
+        </a>
+    </div>
+
+    <!-- Batting / Bowling Tabs -->
+    <ul class="nav nav-tabs mb-4" role="tablist">
+
+        <li class="nav-item">
+            <button class="nav-link active"
+                    data-bs-toggle="tab"
+                    data-bs-target="#batting"
+                    type="button"
+                    role="tab">
+                Batting
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#bowling"
+                    type="button"
+                    role="tab">
+                Bowling
+            </button>
+        </li>
+
+    </ul>
+
+    <div class="tab-content">
+
+        <!-- ================= BATTING TAB ================= -->
+
+        <div class="tab-pane fade show active"
+             id="batting"
+             role="tabpanel">
+
+            <h4 class="mb-3">Career Batting Statistics</h4>
+
+            <!-- Batting KPI Cards -->
+            <div class="row g-3 mb-4">
+
+                {% for label, value in batting_cards %}
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <p class="text-secondary mb-2">{{ label }}</p>
+                            <h3 class="fw-bold mb-0">
+                                {{ value|default:"—" }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <!-- Batting Season Table -->
+            <h5>Season-wise Batting</h5>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Season</th>
+                            <th>Matches</th>
+                            <th>Runs</th>
+                            <th>Balls</th>
+                            <th>Fours</th>
+                            <th>Sixes</th>
+                            <th>Average</th>
+                            <th>Strike Rate</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for row in profile.batting_by_season %}
+                        <tr>
+                            <td>{{ row.season }}</td>
+                            <td>{{ row.matches }}</td>
+                            <td>{{ row.runs }}</td>
+                            <td>{{ row.balls }}</td>
+                            <td>{{ row.fours }}</td>
+                            <td>{{ row.sixes }}</td>
+                            <td>{{ row.batting_average|default:"—" }}</td>
+                            <td>{{ row.strike_rate|default:"—" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8">No batting records.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+            <!-- Batting Charts -->
+            <div class="row g-3 mt-3">
+
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5>Batting Runs by Season</h5>
+                            <canvas id="battingRunsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5>Batting Average</h5>
+                            <canvas id="battingAverageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5>Batting Strike Rate</h5>
+                            <canvas id="battingStrikeRateChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= BOWLING TAB ================= -->
+
+        <div class="tab-pane fade"
+             id="bowling"
+             role="tabpanel">
+
+            <h4 class="mb-3">Career Bowling Statistics</h4>
+
+            <!-- Bowling KPI Cards -->
+            <div class="row g-3 mb-4">
+
+                {% for label, value in bowling_cards %}
+                <div class="col-6 col-md-4 col-xl-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <p class="text-secondary mb-2">{{ label }}</p>
+                            <h3 class="fw-bold mb-0">
+                                {{ value|default:"—" }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <!-- Bowling Season Table -->
+            <h5>Season-wise Bowling</h5>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Season</th>
+                            <th>Matches</th>
+                            <th>Runs Conceded</th>
+                            <th>Legal Balls</th>
+                            <th>Wickets</th>
+                            <th>Economy</th>
+                            <th>Average</th>
+                            <th>Strike Rate</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for row in profile.bowling_by_season %}
+                        <tr>
+                            <td>{{ row.season }}</td>
+                            <td>{{ row.matches }}</td>
+                            <td>{{ row.runs_conceded }}</td>
+                            <td>{{ row.legal_balls }}</td>
+                            <td>{{ row.wickets }}</td>
+                            <td>{{ row.economy_rate|default:"—" }}</td>
+                            <td>{{ row.bowling_average|default:"—" }}</td>
+                            <td>{{ row.bowling_strike_rate|default:"—" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8">No bowling records.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+            <!-- Bowling Charts -->
+            <div class="row g-3 mt-3">
+
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5>Wickets by Season</h5>
+                            <canvas id="bowlingWicketsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5>Bowling Average</h5>
+                            <canvas id="bowlingAverageChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5>Economy Rate</h5>
+                            <canvas id="bowlingEconomyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Safely expose Django chart data -->
+    {{ batting_chart_json|json_script:"batting-chart-data" }}
+    {{ bowling_chart_json|json_script:"bowling-chart-data" }}
+
+</div>
+{% endblock %}
+
+
+<!-- ================= CHART.JS ================= -->
+
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const battingElement = document.getElementById("batting-chart-data");
+    const bowlingElement = document.getElementById("bowling-chart-data");
+
+    if (!battingElement || !bowlingElement || typeof Chart === "undefined") {
+        console.error("Chart.js or chart data unavailable.");
+        return;
+    }
+
+    const batting = JSON.parse(battingElement.textContent);
+    const bowling = JSON.parse(bowlingElement.textContent);
+
+    const charts = {};
+
+    function createChart(canvasId, label, labels, values, type) {
+
+        const canvas = document.getElementById(canvasId);
+
+        if (!canvas) {
+            console.error("Canvas missing:", canvasId);
+            return;
+        }
+
+        if (!Array.isArray(labels) || !Array.isArray(values)) {
+            console.error("Invalid chart arrays:", canvasId, labels, values);
+            return;
+        }
+
+        if (labels.length !== values.length || labels.length === 0) {
+            console.error("Chart data length mismatch:", canvasId);
+            return;
+        }
+
+        if (charts[canvasId]) return;
+
+        charts[canvasId] = new Chart(canvas, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: values,
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: false,
+                    spanGaps: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                interaction: {
+                    intersect: false,
+                    mode: "index"
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: "IPL Season"
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function initializeBattingCharts() {
+
+        createChart(
+            "battingRunsChart",
+            "Runs",
+            batting.seasons,
+            batting.runs,
+            "bar"
+        );
+
+        createChart(
+            "battingAverageChart",
+            "Batting Average",
+            batting.seasons,
+            batting.average,
+            "line"
+        );
+
+        createChart(
+            "battingStrikeRateChart",
+            "Strike Rate",
+            batting.seasons,
+            batting.strike_rate,
+            "line"
+        );
+    }
+
+    function initializeBowlingCharts() {
+
+        createChart(
+            "bowlingWicketsChart",
+            "Wickets",
+            bowling.seasons,
+            bowling.wickets,
+            "bar"
+        );
+
+        createChart(
+            "bowlingAverageChart",
+            "Bowling Average",
+            bowling.seasons,
+            bowling.average,
+            "line"
+        );
+
+        createChart(
+            "bowlingEconomyChart",
+            "Economy Rate",
+            bowling.seasons,
+            bowling.economy,
+            "line"
+        );
+    }
+
+    initializeBattingCharts();
+
+    document.querySelectorAll('[data-bs-toggle="tab"]').forEach(function (tab) {
+
+        tab.addEventListener("shown.bs.tab", function (event) {
+
+            const target = event.target.getAttribute("data-bs-target");
+
+            if (target === "#batting") initializeBattingCharts();
+            if (target === "#bowling") initializeBowlingCharts();
+
+            Object.values(charts).forEach(function (chart) {
+                chart.resize();
+            });
+        });
+    });
+
+});
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{
+    "model_name": "legal_balls_mean_baseline",
+    "target": "target_next_match_legal_balls",
+    "training_mean": 19.44855727193238,
+    "training_rows": 10293,
+    "validation": {
+        "rows": 2025,
+        "MAE": 5.083831298509235,
+        "RMSE": 5.922134325068095,
+        "R2": -0.006512859105897162
+    },
+    "test": {
+        "rows": 1805,
+        "MAE": 5.544860732881153,
+        "RMSE": 6.592266074918988,
+        "R2": -0.011553063910143324
+    }
+}

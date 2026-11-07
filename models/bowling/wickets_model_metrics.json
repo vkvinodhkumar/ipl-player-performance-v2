@@ -1,0 +1,27 @@
+{
+    "validation": {
+        "MAE": 0.7834762413274249,
+        "RMSE": 1.0331015833463146,
+        "R2": 0.018917692598121927,
+        "Poisson Deviance": 1.2239510918417318
+    },
+    "test": {
+        "MAE": 0.7636570175564702,
+        "RMSE": 0.9936457718244734,
+        "R2": 0.023595159239700014,
+        "Poisson Deviance": 1.1610791715432909,
+        "Prediction Mean": 0.908199578788714,
+        "Prediction Std": 0.14549603848288759
+    },
+    "test_baseline": {
+        "MAE": 0.7820518637710107,
+        "RMSE": 1.00869485452939,
+        "R2": -0.006204735779690385,
+        "Poisson Deviance": 1.1963804703344152,
+        "Prediction Mean": 0.8997376858058873,
+        "Prediction Std": 2.220446049250313e-16
+    },
+    "test_rows": 1805,
+    "selection_metric": "MAE",
+    "test_baseline_improved": true
+}

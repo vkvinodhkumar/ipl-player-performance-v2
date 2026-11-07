@@ -1,0 +1,11 @@
+target,test_rows,unique_indices,target_values_match,DL_predictions_finite,test_start,test_end
+target_next_match_runs_scored,2375,True,True,True,2024-05-02,2026-05-29
+target_next_match_balls_faced,2375,True,True,True,2024-05-02,2026-05-29
+target_next_match_fours,2375,True,True,True,2024-05-02,2026-05-29
+target_next_match_sixes,2375,True,True,True,2024-05-02,2026-05-29
+target_next_match_strike_rate,2373,True,True,True,2024-05-02,2026-05-29
+target_next_match_dismissals,2375,True,True,True,2024-05-02,2026-05-29
+target_next_match_wickets,1805,True,True,True,2024-05-02,2026-05-29
+target_next_match_runs_conceded,1805,True,True,True,2024-05-02,2026-05-29
+target_next_match_legal_balls,1805,True,True,True,2024-05-02,2026-05-29
+target_next_match_economy_rate,1805,True,True,True,2024-05-02,2026-05-29

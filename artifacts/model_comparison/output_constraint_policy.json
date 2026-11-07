@@ -1,0 +1,22 @@
+{
+    "count_targets": [
+        "target_next_match_balls_faced",
+        "target_next_match_dismissals",
+        "target_next_match_fours",
+        "target_next_match_legal_balls",
+        "target_next_match_runs_conceded",
+        "target_next_match_runs_scored",
+        "target_next_match_sixes",
+        "target_next_match_wickets"
+    ],
+    "rate_targets": [
+        "target_next_match_economy_rate",
+        "target_next_match_strike_rate"
+    ],
+    "rules": {
+        "all_targets": "Clip negative predictions to zero at output layer",
+        "count_targets": "Round to nearest integer after clipping",
+        "rate_targets": "Round to 2 decimal places after clipping",
+        "raw_predictions": "Always preserve for audit and evaluation"
+    }
+}
