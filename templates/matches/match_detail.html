@@ -82,7 +82,7 @@
                 <div class="card-body">
                     <div class="text-secondary small">Match Result</div>
                     <h6 class="fw-bold mt-2">
-                        {{ match.result|default:"Not available" }}
+                        {{  match.winner |default:"Not available" }}
                     </h6>
                     {% if match.method %}
                     <small class="text-secondary">Method: {{ match.method }}</small>
